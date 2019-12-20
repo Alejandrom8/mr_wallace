@@ -1,0 +1,96 @@
+*{
+    margin:0;
+    padding:0;
+}
+
+#menu{
+    width:100%;
+    height:auto;
+    min-height: 60px;
+    background-color:#eee;
+    position:fixed;
+    z-index:10;
+    // border-bottom:1px solid #666;
+
+    #brand{
+        color:#222;
+        font-family: 'Chathura', sans-serif;
+        font-size:40px;
+        letter-spacing: 5px;
+        line-height: 0;
+        font-weight: bold;
+    }
+
+    $transition_time: 0.3s;
+
+    .nav-link{
+        color:#271443;
+        font-weight:500;
+        transform: all $transition_time;
+        -webkit-transform: all $transition_time;
+    }
+
+    .nav-link:hover{
+        color:yellow;
+        text-shadow: 1px 1px 3px #000;
+        transform: all $transition_time;
+        -webkit-transform: all $transition_time;
+    }
+}
+
+.container{
+    max-width: 100%;
+    width:100%;
+    margin:0;
+    padding:0;
+}
+
+.awesome{
+    width:200px;
+    min-height:50px;
+    font-family: 'Hind Vadodara', sans-serif;
+    font-size:22px;
+}
+
+#banner {
+    width: 100%;
+    height: 100vh;
+    background-image: url(../images/espacio_lavel1.png);
+    background-attachment: fixed;
+  
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    overflow:hidden;
+
+    color:#fff;
+  
+    .title{
+        margin:0 auto;
+        width:60%;
+        text-align: center;
+
+        h1{
+            font-family: 'Major Mono Display', monospace;
+            font-size:100px;     
+            text-shadow: 1px 1px 10px #666; 
+            font-weight: bold;
+        }
+
+    }
+}
+
+#columns{
+    background-color:#000;
+    color:#fff;
+}
+
+/*
+    nav(id="menu", class="navbar navbar-expanded-lg")
+      a(href="#", class="navbar-brand", id="brand") FIDU
+      ul(class="navbar-nav mr-auto")
+        li(class="nav-item active") about
+        li(class="nav-item") games
+
+*/

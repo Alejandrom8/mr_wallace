@@ -1,0 +1,2 @@
+#Adding node modules to git ignore to better download activitie
+node_modules/
