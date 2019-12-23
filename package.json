@@ -4,21 +4,29 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
+    "test": "jest",
     "sass-default": "sass --watch resources/sass/default.scss public/stylesheets/default.css",
-    "test": "jest"
+    "sass-login": "sass --watch resources/sass/login.scss public/stylesheets/login.css",
+    "sass-signup": "sass --watch resources/sass/signup.scss public/stylesheets/signup.css"
   },
   "dependencies": {
+    "@react-ssr/express": "^0.19.6",
+    "await-to-js": "^2.1.1",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^4.4.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-session": "^1.17.0",
+    "express-validator": "^6.3.0",
     "http-errors": "~1.6.3",
     "jest": "^24.9.0",
     "mongodb": "^3.4.0",
     "morgan": "~1.9.1",
     "mysql": "^2.17.1",
     "phaser": "^3.21.0",
-    "pug": "2.0.0-beta11"
+    "pug": "2.0.0-beta11",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   }
 }

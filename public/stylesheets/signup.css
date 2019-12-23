@@ -1,0 +1,15 @@
+#content {
+  background-image: url(../images/espacio_lavel1.png);
+  background-attachment: fixed;
+}
+#content #planet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+#content #planet img {
+  margin: 0 auto;
+}
+
+/*# sourceMappingURL=signup.css.map */

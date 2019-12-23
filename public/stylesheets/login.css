@@ -1,0 +1,18 @@
+.margen {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  background-image: url(../images/espacio_lavel1.png);
+  background-attachment: fixed;
+}
+.margen #form-login {
+  width: 30%;
+  margin: 0 auto;
+  min-height: 70vh;
+  background-color: #fff;
+}
+
+/*# sourceMappingURL=login.css.map */

@@ -1,0 +1,19 @@
+#content{
+    background-image: url(../images/espacio_lavel1.png);
+    background-attachment: fixed;
+
+    #sign-up-form{
+        // background-color:#fff;
+    }
+
+    #planet{
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+
+        img{
+            margin:0 auto;
+        }
+    }
+}

@@ -1,22 +1,27 @@
-const Database = require("../infraestructure/Database.js");
+const config = require("../infraestructure/config.js");
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql');
+const util = require('util');
 
-async function authUser(userData){
+async function authUser (userData){
     //The procedure response
     let message = '', status = false;
     //calling validateData to know
     const validation = validateData(userData);
 
     if(validation.status){
-        const requestedPass = await getUserPass(userData.nickname);
-        const passValidation = await validatePassword(userData.password, requestedPass);
+        const requestedPass = await getUserPass(userData.nickname).catch(e => { throw new Error(e); });
+        if(requestedPass != ''){
+            const passValidation = await validatePassword(userData.password, requestedPass).catch(e => { throw new Error(e); });
 
-        if(passValidation){
-            message = "Autenticación correcta";
-            status = true;
+            if(passValidation){
+                message = "Autenticación correcta";
+                status = true;
+            }else{
+                message = "Contraseña incorrecta";
+            }
         }else{
-            message = "Contraseña incorrecta";
+            message = 'Usuario incorrecto';
         }
     }else{ 
         message = validation.message;
@@ -24,11 +29,12 @@ async function authUser(userData){
 
     return {
         "message": message,
-        "status": status
+        "status": status,
+        "data": status ? validation.data : null
     };
 }
 
-function validateData(userData){
+function validateData (userData){
     let message = '', status = false;
 
     if(typeof userData === 'object'){
@@ -44,34 +50,48 @@ function validateData(userData){
 
     return {
         "message": message,
-        "status": status
+        "status": status,
+        "data":{
+            "nickname": userData.nickname,
+            "email": userData.email
+        }
     };
 }
 
-async function getUserPass(nickname){
-    let database = new Database();
+async function getUserPass (nickname){
+
+    const database = mysql.createConnection(config);
+    const query = util.promisify(database.query).bind(database);
 
     try{
-        database.connect();
-    
         let sql = 'SELECT password FROM ?? WHERE nick_name = ? LIMIT 1';
         let data = ['players', nickname];
         sql = mysql.format(sql, data);
-    
-        const password = await database.query(sql);
+
+        const dataRecived = await query(sql);
 
         database.end();
 
-        return password;
-
-    }catch(error){
-        throw new Error(error);
+        if(!dataRecived){ 
+            throw "No se encontraron datos para esta petición"; 
+        }else if(dataRecived == null || dataRecived.length == 0){
+            return ''
+        }
+        
+        return dataRecived[0].password;
+    }catch(err){
+        console.log(err);
     }
 }
 
-async function validatePassword(passwordEntered, truePassword){
-    const validation = await bcrypt.compare(passwordEntered, truePassword);
+async function validatePassword (passwordEntered, truePassword){
+    const validation = await new Promise( (resolve, reject) => {
+        bcrypt.compare(passwordEntered, truePassword, (err, res) => {
+            if(err){ reject(err); }
+            resolve(res);
+        });
+    });
     return validation;
 }
 
-console.log(authUser({"nickname": "alex", "password": "Alejandrom8"}));
+module.exports = authUser;
