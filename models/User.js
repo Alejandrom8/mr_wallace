@@ -161,8 +161,6 @@ class User extends Model {
 
                 this.password = await this.encryptPassword(this.password);
 
-                console.log(this.password);
-
                 let sql = 'INSERT INTO players(id, name, password, nick_name, email) VALUES(0, ?, ?, ?, ?)';
                 const valuesToInsert = [
                     this.name,

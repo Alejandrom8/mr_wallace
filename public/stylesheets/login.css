@@ -14,5 +14,10 @@
   min-height: 70vh;
   background-color: #fff;
 }
+@media screen and (max-width: 700px) {
+  .margen #form-login {
+    width: 90%;
+  }
+}
 
 /*# sourceMappingURL=login.css.map */
