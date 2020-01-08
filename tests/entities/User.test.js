@@ -1,9 +1,10 @@
 const User = require('../../models/User');
+const ServiceResponse = require('../../entities/Response');
 
 const userTestData = {
     "name": "Alejandro Gómez García",
     "nickname": "alex",
-    "email": "ale.wild.ones@gmail.com",
+    "email": "alejandro@gmail.com",
     "password": "Alejandrom8"
 };
 
@@ -40,10 +41,10 @@ describe('this test should describe the behavior of a user sign up', () => {
 
     it('insert a user in the daatabase validating that is not duplicated and encrypting the password', async () => {
         const response = await usr.signup();
-        expect(response).toEqual({
-            'message': expect.anything(),
-            'status': true
-        });
+        let expected = new ServiceResponse();
+        expected.message = expect.anything();
+        expected.success = true;
+        expect(response).toEqual(expected);
     });
 });
 
@@ -64,11 +65,11 @@ describe('this test should describe the behavior of a user login', () => {
     it("validate the user", () => {
         const response = usr.validateData(userTestData);
         expect(response).toBeDefined();
-        expect(response).toStrictEqual({
-            "message": '',
-            "status": true,
-            "data": expect.anything()
-        });
+        let expected = new ServiceResponse();
+        expected.message = expect.anything();
+        expected.success = true;
+        expected.data = expect.anything();
+        expect(response).toEqual(expected);
     });
 
     it('obtain the user password', async () => {
@@ -88,10 +89,10 @@ describe('this test should describe the behavior of a user login', () => {
     it('should login the user', async () => {
         const validation = await usr.login();
         expect(validation).toBeDefined();
-        expect(validation).toEqual({
-            "message": "Autenticación correcta",
-            "status": true,
-            'data': expect.anything()
-        });
+        let expected = new ServiceResponse();
+        expected.message = "Autenticación correcta";
+        expected.success = true;
+        expected.data = expect.anything();
+        expect(validation).toEqual(expected);
     });
 });

@@ -3,12 +3,6 @@ var router = express.Router();
 
 const User = require('../models/User');
 
-router.get('/', function(req, res, next) {
-  res.render('login', { title: 'login' });
-});
-
-exports.get = router;
-
 router.post('/', async function(req, res, next) {
     const userData = req.body;
 
@@ -19,13 +13,12 @@ router.post('/', async function(req, res, next) {
 
     const auth = await user_model.login();
 
-    if(auth.status){
+    if(auth.success){
         ssn = req.session;
         ssn.nickname = userData.nickname;
-        res.redirect('/home');
-    }else{
-        res.send(`Error en el logeo: ${auth.message}`);
     }
+
+    res.json(auth);
 });
-  
-exports.post = router;
+
+module.exports = router;

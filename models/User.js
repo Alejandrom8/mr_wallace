@@ -2,7 +2,8 @@ const Model = require('./model');
 const mysql = require('mysql');
 const bcrypt = require('bcryptjs');
 const ServiceResponse = require('../entities/Response');
-const ClientSideException = require('../entities/ClientSideException');
+// const ClientSideException = require('../entities/ClientSideException');
+
 
 class User extends Model {
 
@@ -18,11 +19,14 @@ class User extends Model {
         return this._name;
     }
 
-    /** @type String name */
+    /** @param {string} name - name */
     set name(name){
         this._name = name;
     }
 
+    /**
+     * @returns {string}
+     */
     get password(){
         return this._password;
     }
@@ -56,43 +60,50 @@ class User extends Model {
         };
     }
 
+    /**
+     * Log a user with the data given at the time of creating the object.
+     * strictly, this method use the nickname and the password of the user.
+     * @returns { ServiceResponse } - an object with the status of this process.
+     */
     async login(){
         //The procedure response
-        let message = '', status = false;
+        let response = new ServiceResponse();
         //calling validateData to know
         const validation = this.validateData(this.dataAsObject);
 
-        if(validation.status){
+        if(validation.success){
             const requestedPass = await this.getUserPass(validation.data.nickname).catch(e => { throw new Error(e); });
             if(requestedPass != ''){
                 const passValidation = await this.validatePassword(validation.data.password, requestedPass).catch(e => { throw e; });
 
                 if(passValidation){
-                    message = "Autenticación correcta";
-                    status = true;
+                    response.message = "Autenticación correcta";
+                    delete validation.data.password;
+                    response.data = validation.data;
+                    response.success = true;
                 }else{
-                    message = "Contraseña incorrecta";
+                    response.message = "Contraseña incorrecta";
                 }
             }else{
-                message = 'Usuario incorrecto';
+                response.message = 'Usuario incorrecto';
             }
         }else{ 
-            message = validation.message;
+            response.message = validation.message;
         }
 
-        return {
-            "message": message,
-            "status": status,
-            "data": status ? validation.data : null
-        };
+        return response;
     }
 
+    /**
+     * 
+     * @param { object } userData 
+     */
     validateData (userData){
-        let message = '', status = false;
+        let message = '', success = false;
     
         if(typeof userData === 'object'){
             if(userData.nickname && userData.password){
-                status = true;
+                success = true;
             }else{
                 message = "Falto llenar el campo de ";
                 message += userData.nickname ? "contraseña" : "nickname";
@@ -103,7 +114,7 @@ class User extends Model {
     
         return {
             "message": message,
-            "status": status,
+            "success": success,
             "data":{
                 "nickname": userData.nickname,
                 "password": userData.password
@@ -111,6 +122,10 @@ class User extends Model {
         };
     }
     
+    /**
+     * 
+     * @param { string } [nickname]
+     */
     async getUserPass (nickname = null){
 
         nickname = nickname ? nickname : this.nickname;
@@ -125,12 +140,13 @@ class User extends Model {
             if(!dataRecived){ 
                 throw "No se encontraron datos para esta petición"; 
             }else if(dataRecived == null || dataRecived.length == 0){
-                return ''
+                return null;
             }
             
             return dataRecived[0].password;
         }catch(err){
             console.log(err);
+            return null;
         }
     }
     
@@ -152,8 +168,6 @@ class User extends Model {
                 nickname: this.nickname,
                 email: this.email
             });
-
-            console.log(results);
 
             const exists = results[0], elementThatExists = results[1];
 
@@ -178,11 +192,12 @@ class User extends Model {
                     response.message = 'Error al insertar al usuario en la base de datos';
                 }else{
                     response.message = `Se han insertado ${queryData.affectedRows} filas`;
-                    response.status = true;
+                    response.success = true;
                 }
 
             }else{
-                throw new ClientSideException(`Ya existe un usuario con este ${elementThatExists}`);   
+                // throw new ClientSideException(`Ya existe un usuario con este ${elementThatExists}`);
+                response.message = `Ya existe un usuario con este ${elementThatExists}`;
             }
         }catch(e){
             response.message = e;
@@ -248,6 +263,11 @@ class User extends Model {
         }
     }
 
+    /**
+     * 
+     * @param {string} password - the desencrypted password of the user.
+     * @returns {string} - the encrypted password.
+     */
     async encryptPassword(password){
         const encrypted = await new Promise((resolve, reject) => {
             bcrypt.genSalt(10, function(err, salt){

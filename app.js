@@ -1,25 +1,34 @@
-var createError = require('http-errors');
-var express = require('express');
-var session = require('express-session');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var morgan = require('morgan');
+var createError = require('http-errors'),
+    express = require('express'),
+    session = require('express-session'),
+    path = require('path'),
+    cookieParser = require('cookie-parser'),
+    morgan = require('morgan'),
+    cors = require('cors'),
+    UUID = require('uuid'),
+    socket_io = require('socket.io');
 
 //Routes
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var loginRouter = require('./routes/login');
-var signup = require('./routes/signup');
+var loginRouter = require('./routes/login'),
+    signup = require('./routes/signup'),
+    utilities = require('./routes/utilities');
 
 var app = express();
+var io = socket_io();
+app.io = io;
+
+io.configure(() => {
+  io.set('log lavel', 0);
+  io.set('authorization', (handshakeData, callback) => {
+    callback(null, true);
+  })
+});
+
+//views
+// app.use('views', path.join(__dirname, ''))
 
 //app variables
 let ssn;
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jsx');
-app.engine('jsx', require('express-react-views').createEngine());
 
 //Middlewares
 //  setting up the sessions system
@@ -28,7 +37,7 @@ app.use(session({
   'resave': false,
   'saveUninitialized': false
 })); 
-
+app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -36,20 +45,27 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Routes
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/login', loginRouter.get);
-app.use('/login', loginRouter.post);
-app.use('/sign_up', signup.get);
-app.use('/sign_up', signup.post);
-
+app.use('/login', loginRouter);
+app.use('/sign_up', signup);
+app.post('/utilities/searchCoincidencesForNickname', utilities.searchNicknameCoincidences);
+app.post('/utilities/searchCoincidencesForEmail', utilities.searchEmailCoincidences)
 app.get('/home', (req, res) => {
   ssn = req.session;
   console.log(ssn);
   res.send('Bienvenido a esto!');
 });
 
-// app.use(express.static(__dirname, "public/images"));
+//Sockets
+io.on('connection', (client) => {
+  client.userid = UUID();
+  client.emit('onconnected', { id: client.userid });
+  console.log('\t socket.io:: player ' + client.userid + ' connected');
+  client.on('disconnect', function () {
+    //Useful to know when someone disconnects
+    console.log('\t socket.io:: client disconnected ' + client.userid );
+  }); 
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -57,13 +73,14 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
+  // sending the error json 
   res.status(err.status || 500);
-  res.render('error');
+  res.json(
+    {
+      "message": err.message,
+      "error": req.app.get('env') === 'development' ? err : {}
+    }
+  );
 });
 
 module.exports = app;
