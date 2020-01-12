@@ -15,31 +15,31 @@ var juego = {
         preload: function () {
             //background del canvas
 
-            game.load.tilemap('level1', 'Recursos_Graficos/Mapav1.csv');
-            game.load.image('ground_1x1', 'Recursos_Graficos/mapav1.png');
+            game.load.tilemap('level1', '/mr_wallace/Recursos_Graficos/Mapav1.csv');
+            game.load.image('ground_1x1', '/mr_wallace/Recursos_Graficos/mapav1.png');
 
-            game.load.image('espacio', 'Recursos_Graficos/espacio_lavel1.jpg');
-            game.load.image('closeButton', 'Recursos_Graficos/closeButton.png');
+            game.load.image('espacio', '/mr_wallace/Recursos_Graficos/espacio_lavel1.jpg');
+            game.load.image('closeButton', '/mr_wallace/Recursos_Graficos/closeButton.png');
             
-            game.load.image('bloque', 'Recursos_Graficos/CEM1_V1.png');
-            game.load.image('laser', 'Recursos_Graficos/laser1.png');
-            game.load.image('chorro', 'Recursos_Graficos/bullet206.png');
-            game.load.image('asteroide', 'Recursos_Graficos/CEG1_V1.png');
-            game.load.image('BloquePlano', 'Recursos_Graficos/CECH1_V1.png');
-            game.load.image('asteroide_Pequeño', 'Recursos_Graficos/asteroid1P.png');
-            game.load.image('boxBack', 'Recursos_Graficos/boxBack.png');
+            game.load.image('bloque', '/mr_wallace/Recursos_Graficos/CEM1_V1.png');
+            game.load.image('laser', '/mr_wallace/Recursos_Graficos/laser1.png');
+            game.load.image('chorro', '/mr_wallace/Recursos_Graficos/bullet206.png');
+            game.load.image('asteroide', '/mr_wallace/Recursos_Graficos/CEG1_V1.png');
+            game.load.image('BloquePlano', '/mr_wallace/Recursos_Graficos/CECH1_V1.png');
+            game.load.image('asteroide_Pequeño', '/mr_wallace/Recursos_Graficos/asteroid1P.png');
+            game.load.image('boxBack', '/mr_wallace/Recursos_Graficos/boxBack.png');
             
-            game.load.spritesheet('hombreCaja', 'Recursos_Graficos/Sprite_Dr_WallaceRv2.png', 280, 360, 12);
-            game.load.spritesheet('enemigo', 'Recursos_Graficos/Sprite_Enemigov2.png', 375, 350, 3);
+            game.load.spritesheet('hombreCaja', '/mr_wallace/Recursos_Graficos/Sprite_Dr_WallaceRv2.png', 280, 360, 12);
+            game.load.spritesheet('enemigo', '/mr_wallace/Recursos_Graficos/Sprite_Enemigov2.png', 375, 350, 3);
             	//objetos generadores de eventos
-					game.load.spritesheet('plataforma_Salto', 'Recursos_Graficos/placaS2.png', 300, 100, 4);
+					game.load.spritesheet('plataforma_Salto', '/mr_wallace/Recursos_Graficos/placaS2.png', 300, 100, 4);
             //imagenes para el display de puntos
-            game.load.image('life', 'Recursos_Graficos/lifehuman.png');
+            game.load.image('life', '/mr_wallace/Recursos_Graficos/lifehuman.png');
             //mejorando la carga de los recursos del juego
-             game.load.audio('AudiodeFondo', 'audio/musicaFondo/Soliloquy.mp3');
-             game.load.audio('salto', 'audio/EfectosSonido/Salto_2.wav');
-             game.load.audio('disparo', 'audio/EfectosSonido/disparo.wav');
-             game.load.audio('Pasos', 'audio/steps2.mp3');
+            game.load.audio('AudiodeFondo', '/mr_wallace/audio/musicaFondo/Soliloquy.mp3');
+            game.load.audio('salto', '/mr_wallace/audio/EfectosSonido/Salto_2.wav');
+            game.load.audio('disparo', '/mr_wallace/audio/EfectosSonido/disparo.wav');
+            game.load.audio('Pasos', '/mr_wallace/audio/steps2.mp3');
             game.forceSingleUpdate = true;
         },
 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dr. Wallace</title>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+	<script type='text/JavaScript'>
+		var socket = io.connect('/');
+			//Now we can listen for that event
+		socket.on('onconnected', function( data ) {
+				//Note that the data is the object we sent from the server, as is. So we can assume its id exists. 
+			console.log( 'Connected successfully to the socket.io server. My server side ID is: ' + data.id );
+        });
+        
+        window.players = {};
+    </script>
+    
+    <script type="text/javascript" src="phaser/dist/phaser.js"></script>
+
+    <!-- Entities -->
+    <script type="text/javascript" src="dr_wallace/src/models/enemies/Enemies.js"></script>
+    <script type="text/javascript" src="dr_wallace/src/models/bullets/Bullets.js"></script>
+    <script type="text/javascript" src="dr_wallace/src/models/SpritePlayer.js"></script>
+    <script type="text/javascript" src="dr_wallace/src/models/Player.js"></script>
+    <!-- <script type="text/javascript" src="dr_wallace/src/models/Client.js"></script> -->
+
+    <!-- Scenes -->
+    <script type="text/javascript" src="dr_wallace/src/scenes/Boot.js"></script>
+    <script type="text/javascript" src="dr_wallace/src/scenes/Main.js"></script>
+    <script type="text/javascript" src="dr_wallace/src/scenes/Game.js"></script>
+
+    <!-- main file-->
+    <script type="text/javascript" src="dr_wallace/src/index.js"></script>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        body{
+            background-color:#000;
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+</body>
+</html>
