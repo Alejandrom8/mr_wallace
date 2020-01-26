@@ -5,7 +5,7 @@ class Main extends Phaser.Scene{
     }
 
     startGame(){
-        this.mainMusic.stop()
+        // this.mainMusic.stop()
         this.scene.start('game')
     }
     
@@ -49,8 +49,8 @@ class Main extends Phaser.Scene{
         startButton.setPosition(this.cameras.main.centerX, this.cameras.main.centerY )
         startButton.setInteractive().on('pointerdown', this.startGame)
 
-        this.mainMusic = this.sound.add('mainMusic')
-        this.mainMusic.play({loop: true})
+        // this.mainMusic = this.sound.add('mainMusic')
+        // this.mainMusic.play({loop: true})
     }
 
     update(){

@@ -1,11 +1,11 @@
 class Player{
 
-    static onConnect(io, socket){
+    static onConnect(io, socket, session){
         socket.on('newPlayer', (position) => {
-            socket.player = new Player(socket.id, position)
+            socket.player = new Player(socket.id, session.playerData.nickname, position)
             Player.list[socket.player.id] = socket.player;
 
-            console.log('A new player has been created with id: ' + socket.player.id);
+            console.log('A new player has been created with nickname: ' + socket.player.nickname);
 
             var players = [];
 
@@ -39,8 +39,9 @@ class Player{
         io.emit('remove', socket.id)
     }
 
-    constructor(id, position){
+    constructor(id, nickname, position){
         this.id = id;
+        this.nickname = nickname;
         this.x = position.x;
         this.y = position.y;
         this.direction = position.direction;

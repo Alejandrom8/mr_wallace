@@ -1,3 +1,7 @@
+/**
+ * @type { Game }
+ * @extends {Phaser.Scene}
+ */
 class Game extends Phaser.Scene{
     constructor(){
         super('game');
@@ -16,8 +20,11 @@ class Game extends Phaser.Scene{
         this.load.setBaseURL('http://192.168.1.70:2345/dr_wallace/src/assets');
 
         //Sprites
-        this.load.spritesheet('boxMan', 'sprites/Sprite_Dr_WallaceRv2.png', { frameWidth: 280, frameHeight: 360});
+        this.load.spritesheet('boxMan', 'sprites/Sprite_Dr_Wallace_Weapon.png', { frameWidth: 140, frameHeight: 177});
         this.load.image('laser', 'spriteAdds/laser_1.png');
+
+        //Weapons
+        this.load.image('laser_weapon', 'spriteAdds/weapons/default_1.png');
 
         //other objects
         this.load.image('space', 'backgrounds/espacio_lavel1_v3.jpg');
@@ -53,33 +60,35 @@ class Game extends Phaser.Scene{
                 this.player.stopWalk()
             }
         })
-
-        // this.bullets = new Bullets(this);
-        // this.physics.add.collider(this.bullets, worldLayer, (bullet, wolrd) => {
-        //     bullet.destroy()
-        // })
-
-        // this.input.on('pointerdown', (pointer) => {
-        //     this.bullets.fireBullet(this.boxMan.x, this.boxMan.y)
-        // })
     }
 
     update(){
 
         this.space.tilePositionX -= 0.2;
 
-        if(this.keyRight.isDown){
-            this.player.walkRight();
-            if(this.keyUp.isDown){
+        if(this.input.activePointer.isDown){
+            const pointerDirection = this.input.activePointer.x;
+            const playerPosition = this.player.getCoordinates();
+            const direction = pointerDirection > playerPosition.x ? 'right' : 'left';
+            this.player.shot(direction);
+        }
+
+        if(window.IS_TOUCH){
+            //do something for toucheable devices
+        }else{
+            if(this.keyRight.isDown){
+                this.player.walkRight();
+                if(this.keyUp.isDown){
+                    this.player.jump();
+                }
+            }else if(this.keyLeft.isDown){
+                this.player.walkLeft();
+                if(this.keyUp.isDown){
+                    this.player.jump();
+                }
+            }else if(this.keyUp.isDown){
                 this.player.jump();
             }
-        }else if(this.keyLeft.isDown){
-            this.player.walkLeft();
-            if(this.keyUp.isDown){
-                this.player.jump();
-            }
-        }else if(this.keyUp.isDown){
-            this.player.jump();
         }
     }
 }

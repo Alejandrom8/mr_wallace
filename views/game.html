@@ -4,49 +4,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <title>Dr. Wallace</title>
 
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossOrigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css?family=Chathura|Hind+Vadodara|Major+Mono+Display&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/game.css">
+
+    <!-- JS -->
     <script src="/socket.io/socket.io.js"></script>
 
 	<script type='text/JavaScript'>
-		var socket = io.connect('/');
-			//Now we can listen for that event
-		socket.on('onconnected', function( data ) {
-				//Note that the data is the object we sent from the server, as is. So we can assume its id exists. 
-			console.log( 'Connected successfully to the socket.io server. My server side ID is: ' + data.id );
+    (() => {
+        window.IS_TOUCH = false;
+        window.addEventListener('touchstart', () => {			
+            window.IS_TOUCH = true;
         });
-        
-        window.players = {};
+    });
     </script>
     
+    <!-- Main Framework -->
     <script type="text/javascript" src="phaser/dist/phaser.js"></script>
 
     <!-- Entities -->
-    <script type="text/javascript" src="dr_wallace/src/models/enemies/Enemies.js"></script>
-    <script type="text/javascript" src="dr_wallace/src/models/bullets/Bullets.js"></script>
-    <script type="text/javascript" src="dr_wallace/src/models/SpritePlayer.js"></script>
-    <script type="text/javascript" src="dr_wallace/src/models/Player.js"></script>
-    <!-- <script type="text/javascript" src="dr_wallace/src/models/Client.js"></script> -->
+        <!-- Others -->
+        <script type="text/javascript" src="dr_wallace/src/models/enemies/Enemies.js"></script>
+        <script type="text/javascript" src="dr_wallace/src/models/bullets/Bullet.js"></script>
+        <script type="text/javascript" src="dr_wallace/src/models/bullets/Bullets.js"></script>
+        <!-- Player -->
+        <script type="text/javascript" src="dr_wallace/src/models/SpritePlayer.js"></script>
+        <script type="text/javascript" src="dr_wallace/src/models/ContainerPlayer.js"></script>
+        <script type="text/javascript" src="dr_wallace/src/models/Player.js"></script>
 
     <!-- Scenes -->
-    <script type="text/javascript" src="dr_wallace/src/scenes/Boot.js"></script>
-    <script type="text/javascript" src="dr_wallace/src/scenes/Main.js"></script>
-    <script type="text/javascript" src="dr_wallace/src/scenes/Game.js"></script>
+        <script type="text/javascript" src="dr_wallace/src/scenes/Boot.js"></script>
+        <script type="text/javascript" src="dr_wallace/src/scenes/Main.js"></script>
+        <script type="text/javascript" src="dr_wallace/src/scenes/Game.js"></script>
 
     <!-- main file-->
     <script type="text/javascript" src="dr_wallace/src/index.js"></script>
-
-    <style>
-        *{
-            margin:0;
-            padding:0;
-        }
-        body{
-            background-color:#000;
-            text-align:center;
-        }
-    </style>
 </head>
 <body>
+    <div style="font-family: 'coders';"></div>
+    <div id="logApp" class="shadow flex-box">
+        <div class="login-box">
+            <h2 class='mr-wallace-font'>dr Wallace</h2>
+            <br>
+            <form id="login_form" class="form">
+                <div id='debug_div'>
+                    <!--alert-->
+                </div>
+                <div class='form-group'>
+                    <label  for='nickname'>nickname</label>
+                    <input type='text' 
+                           class="form-control"
+                           id='nickname'
+                           name='nickname' 
+                           maxlength='100' 
+                           placeholder='Introduce tu nickname'
+                           required/>
+                </div>
+                <div class='form-group'>
+                    <label  for='password'>contraseña</label>
+                    <input type='password' 
+                           class="form-control" 
+                           id='password' 
+                           name='password'
+                           maxlength='100' 
+                           placeholder='Introduce tu contraseña' 
+                           required/>
+                </div>
+                <button type='submit' class='btn btn-primary btn-block my-4'>entrar</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function manageResponse(res){
+            if(res.success){
+                const logApp = document.getElementById('logApp');
+                // logApp.style.display = 'none';
+                const lgps = logApp.style;
+                lgps.opacity = 0;
+                lgps.webkitAnimation = 'fadeout 3s';
+                lgps.animation = 'fadeout 3s';
+                initGame();
+            }else{
+                const debugDiv = document.getElementById('debug_div');
+                debugDiv.innerHTML = '<div class="alert alert-danger">' + res.message + '</div>';
+            }
+        }
+
+        async function sendFormData(data){
+            try{
+                const headers = new Headers();
+
+                headers.append('Content-Type', 'application/json');
+
+                const credentials = {
+                    method: 'post',
+                    headers: headers,
+                    mode: 'cors',
+                    cache: 'default',
+                    body: JSON.stringify(data)
+                };
+
+                const response = await fetch('/login', credentials);
+
+                if(response.ok){
+                    return await response.json();
+                }else{
+                    throw new Error('Error al logear al usuario');
+                }
+            }catch(e){
+                console.log(e);
+                return;
+            }
+        }
+
+        const loginForm = document.getElementById('login_form');
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const data = {
+                nickname: document.getElementById('nickname').value,
+                password: document.getElementById('password').value
+            }
+            const response = await sendFormData(data);
+            manageResponse(response);
+        });
+    </script>
+    <div id="game"></div>
 </body>
 </html>

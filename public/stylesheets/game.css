@@ -1,0 +1,91 @@
+@font-face{
+    src: url(../fonts/coders_crux.ttf);
+    font-family: "coders";
+}
+
+*{
+    margin:0;
+    padding:0;
+}
+
+body{
+    background-color:#000;
+}
+
+#logApp{
+    z-index:10;
+    overflow:hidden;
+    opacity: 1;
+    height:100vh;
+    -webkit-transition: opacity 1s, height 1s cubic-bezier(1,0,1,0); /* Safari */
+    transition: opacity 1s, height 1s cubic-bezier(1,0,1,0);
+}
+
+@keyframes fadeout{
+    0%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+        display:none;
+    }
+}
+
+.shadow{
+    width:100%;
+    height:100%;
+    position:fixed;
+    background-image:url(../images/espacio_lavel1.png);
+    background-attachment: fixed;
+}
+
+.flex-box{
+    display:flex;
+    justify-content: center;
+    align-content:center;
+    align-items: center;
+}
+
+.login-box{
+    background-color:#fff;
+    width:30%;
+    min-height:70vh;
+    padding:5% 4% 5% 4%;
+    /* border-radius:20px; */
+}
+
+@media screen and (max-width: 785px){
+    .login-box{
+        width:50%;
+    }
+}
+
+@media screen and (max-width: 450px){
+    .login-box{
+        width:90%;
+    }
+}
+
+.mr-wallace-font {
+    font-family: "Major Mono Display", monospace;
+    font-weight: bold;
+    text-align:center;
+    margin-top:4%;
+    margin-bottom:5%;
+}
+
+#game{
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    position: relative;
+    z-index:0;
+}
+
+#game canvas{
+    margin:0 auto;
+    pointer-events: none;
+}

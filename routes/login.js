@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var UUID = require('uuid');
 
 const User = require('../models/User');
 
@@ -15,7 +16,9 @@ router.post('/', async function(req, res, next) {
 
     if(auth.success){
         ssn = req.session;
-        ssn.nickname = userData.nickname;
+        ssn.playerData = {
+            nickname: auth.data.nickname
+        }
     }
 
     res.json(auth);

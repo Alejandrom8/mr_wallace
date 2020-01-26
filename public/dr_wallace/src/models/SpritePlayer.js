@@ -1,27 +1,31 @@
 class SpritePlayer extends Phaser.Physics.Arcade.Sprite{
-    constructor(scene, x, y, collider){
-        super(scene, x, y, 'boxMan', 3)
-        this.scene = scene;
-        this.x = x;
-        this.y = y;
 
-        let custom_body = new Phaser.Physics.Arcade.Body(scene.physics.world, this)
-        this.body = custom_body;
+    /**
+     * 
+     * @param {Phaser.Scene} scene 
+     * @param {number} x 
+     * @param {number} y 
+     */
+    constructor(scene){
+        super(scene, 0, 0, 'boxMan', 3)
+        this.scene = scene;
+        // this.x = x;
+        // this.y = y;
+
+        // let custom_body = new Phaser.Physics.Arcade.Body(scene.physics.world, this)
+        // this.body = custom_body;
+
+        // this.scene.physics.world.enableBody(this, 0);
+        // this.scene.physics.add.collider(this, this.scene.worldLayer)
 
         this.setScale(0.17)
-        this.setBounce(0.2)
-        this.setCollideWorldBounds(true)
+        // this.setBounce(0.2)
+        // this.setOrigin(0.5,0)
+        this.setOrigin(-0.2,-0.1)
+        // this.setCollideWorldBounds(true)
+        this.setAnimations()
 
-        this.scene.physics.world.enableBody(this, 0);
-        this.scene.physics.add.collider(this, this.scene.worldLayer)
-
-        this.setAnimations();
-    }
-
-    setCollisions(collisionObjects){
-        collisionObjects.forEach(item => {
-            this.scene.physics.add.collider(this, item)
-        })
+        // this.scene.add.existing(this)
     }
     
     setAnimations(){
@@ -45,12 +49,5 @@ class SpritePlayer extends Phaser.Physics.Arcade.Sprite{
             frameRate: 0.2,
             repeat: -1
         })
-    }
-
-    isTouchingDown(){
-        if(this.body.blocked.down || this.body.touching.down){
-            return true;
-        }
-        return false;
     }
 }
